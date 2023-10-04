@@ -15,7 +15,7 @@
       <div class="col-md-6">
         <form class="form-inline">
           <div class="form-group">
-            <label for="connect">WebSocket connection:</label>
+            <label>WebSocket connection:</label>
             <button (click)="connect()" class="btn btn-default" type="submit">Connect</button>
             <button (click)="disconnect()" class="btn btn-default" type="submit" disabled="disabled">Disconnect
             </button>
@@ -26,7 +26,7 @@
         <form class="form-inline">
           <div class="form-group">
             <label for="name">What is your name?</label>
-            <input type="text" [(ngModel)]="name" class="form-control" name="name"> <br>
+            <input type="text" [(ngModel)]="name" id="name" class="form-control" name="name"> <br>
           </div>
           <button (click)="sendMessage()" class="btn btn-default" type="submit">Send</button>
         </form>
