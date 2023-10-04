@@ -1,14 +1,18 @@
-import { AppComponent } from './app.component';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
+import {BehaviorSubject} from "rxjs";
+import {Injectable} from "@angular/core";
 
-export class WebSocketAPI {
+@Injectable({
+  providedIn: 'root',
+})
+export class WebSocketApiService {
+  message = new BehaviorSubject<any>(undefined);
+
   webSocketEndPoint: string = 'http://localhost:8084/ws';
   topic: string = '/topic/greetings';
   stompClient: any;
-  appComponent: AppComponent;
-  constructor(appComponent: AppComponent) {
-    this.appComponent = appComponent;
+  constructor() {
   }
   _connect() {
     console.log('Initialize WebSocket Connection');
@@ -53,6 +57,6 @@ export class WebSocketAPI {
 
   onMessageReceived(message: any) {
     console.log('Message Recieved from Server :: ' + message);
-    this.appComponent.handleMessage(JSON.stringify(message.body));
+    this.message.next(message.body);
   }
 }

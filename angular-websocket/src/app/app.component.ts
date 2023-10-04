@@ -1,19 +1,23 @@
-import { Component } from '@angular/core';
-import { WebSocketAPI } from './web-socket-api';
+import { Component, OnInit } from '@angular/core';
+import { WebSocketApiService } from './web-socket-api.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'angular-websocket';
 
-  webSocketAPI!: WebSocketAPI;
   greeting: any;
   name!: string;
+
+  constructor(public webSocketAPI: WebSocketApiService) {}
+
   ngOnInit() {
-    this.webSocketAPI = new WebSocketAPI(new AppComponent());
+    this.webSocketAPI.message.subscribe((res) => {
+      if (res) this.greeting = JSON.parse(res).content;
+    });
   }
 
   connect() {
@@ -26,9 +30,5 @@ export class AppComponent {
 
   sendMessage() {
     this.webSocketAPI._send(this.name);
-  }
-
-  handleMessage(message: any) {
-    this.greeting = message;
   }
 }
