@@ -1,19 +1,21 @@
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
-import {BehaviorSubject} from "rxjs";
-import {Injectable} from "@angular/core";
+import { BehaviorSubject } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebSocketApiService {
   message = new BehaviorSubject<any>(undefined);
+  count = new BehaviorSubject<any>(undefined);
+  active = new BehaviorSubject<boolean>(false);
 
-  webSocketEndPoint: string = 'http://localhost:8084/ws';
-  topic: string = '/topic/greetings';
+  webSocketEndPoint = 'http://localhost:8084/ws';
+  greeting = '/topic/greetings';
+  notificationsCount = '/topic/notifications-count';
   stompClient: any;
-  constructor() {
-  }
+  constructor() {}
   _connect() {
     console.log('Initialize WebSocket Connection');
     let ws = new SockJS(this.webSocketEndPoint);
@@ -22,9 +24,18 @@ export class WebSocketApiService {
     _this.stompClient.connect(
       {},
       function (frame: any) {
-        _this.stompClient.subscribe(_this.topic, function (sdkEvent: any) {
+        _this.active.next(true);
+
+        _this.stompClient.subscribe(_this.greeting, function (sdkEvent: any) {
           _this.onMessageReceived(sdkEvent);
         });
+
+        _this.stompClient.subscribe(
+          _this.notificationsCount,
+          function (sdkEvent: any) {
+            _this.onCountReceived(sdkEvent);
+          }
+        );
         //_this.stompClient.reconnect_delay = 2000;
       },
       this.errorCallBack
@@ -34,6 +45,7 @@ export class WebSocketApiService {
   _disconnect() {
     if (this.stompClient !== null) {
       this.stompClient.disconnect();
+      this.active.next(false);
     }
     console.log('Disconnected');
   }
@@ -56,7 +68,12 @@ export class WebSocketApiService {
   }
 
   onMessageReceived(message: any) {
-    console.log('Message Recieved from Server :: ' + message);
+    console.log('Message Received from Server :: ' + message);
     this.message.next(message.body);
+  }
+
+  onCountReceived(count: any) {
+    console.log('Count Received from Server :: ' + count);
+    this.count.next(count);
   }
 }

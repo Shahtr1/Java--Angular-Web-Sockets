@@ -1,47 +1,118 @@
-<!--The content below is only a placeholder and can be replaced.-->
+<div class="card" style="width: 90%; text-align: center; margin: auto">
+  <div class="card-body">
+    <div style="display: flex; justify-content: space-between">
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item">
+          <a
+            class="nav-link active"
+            id="pills-home-tab"
+            data-toggle="pill"
+            href="#pills-home"
+            role="tab"
+            aria-controls="pills-home"
+            aria-selected="true"
+            >Home</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="pills-profile-tab"
+            data-toggle="pill"
+            href="#pills-profile"
+            role="tab"
+            aria-controls="pills-profile"
+            aria-selected="false"
+            >Profile</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            id="pills-contact-tab"
+            data-toggle="pill"
+            href="#pills-contact"
+            role="tab"
+            aria-controls="pills-contact"
+            aria-selected="false"
+            >Contact</a
+          >
+        </li>
+      </ul>
+
+      <span style="display: flex; gap: 1rem">
+        <span class="nav-item">
+          <button
+            type="button"
+            class="btn btn-success"
+            style="pointer-events: none"
+          >
+            {{ greeting ?? "Connect with me!" }}
+          </button>
+        </span>
+        <span class="nav-item">
+          <button type="button" class="btn btn-info">
+            Notifications
+            <span class="badge badge-danger">{{
+              count === 0 ? "?" : count
+            }}</span>
+          </button>
+        </span>
+      </span>
+    </div>
+    <div id="main-content" class="container">
+      <div class="row" style="gap: 1rem">
+        <div class="col-md-12" style="display: flex; justify-content: center">
+          <form class="form-inline">
+            <div class="form-group" style="display: flex; gap: 1rem">
+              <label>WebSocket connection:</label>
+              <button (click)="connect()" class="btn btn-primary" type="submit">
+                Connect
+              </button>
+              <button
+                (click)="disconnect()"
+                class="btn btn-secondary"
+                type="submit"
+              >
+                Disconnect
+              </button>
+            </div>
+          </form>
+        </div>
+        <div
+          *ngIf="active"
+          class="col-md-12"
+          style="display: flex; justify-content: center"
+        >
+          <form class="form-inline">
+            <div class="form-group" style="display: flex; gap: 1rem">
+              <label for="name">What is your name?</label>
+              <input
+                type="text"
+                [(ngModel)]="name"
+                id="name"
+                class="form-control"
+                name="name"
+              />
+              <br />
+            </div>
+            <button
+              (click)="sendMessage()"
+              class="btn btn-default"
+              type="submit"
+            >
+              Send
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <<noscript>
   <h2 style="color: #ff0000">
     Seems your browser doesn't support Javascript! Websocket relies on
     Javascript being enabled. Please enable Javascript and reload this page!
   </h2></noscript
 >
-<div id="main-content" class="container">
-  <div class="row">
-    <div class="col-md-6">
-      <form class="form-inline">
-        <div class="form-group">
-          <label>WebSocket connection:</label>
-          <button (click)="connect()" class="btn btn-default" type="submit">
-            Connect
-          </button>
-          <button (click)="disconnect()" class="btn btn-default" type="submit">
-            Disconnect
-          </button>
-        </div>
-      </form>
-    </div>
-    <div class="col-md-6">
-      <form class="form-inline">
-        <div class="form-group">
-          <label for="name">What is your name?</label>
-          <input
-            type="text"
-            [(ngModel)]="name"
-            id="name"
-            class="form-control"
-            name="name"
-          />
-          <br />
-        </div>
-        <button (click)="sendMessage()" class="btn btn-default" type="submit">
-          Send
-        </button>
-      </form>
-    </div>
-
-    <p>
-      <b>{{ greeting }}</b>
-    </p>
-  </div>
-</div>
-<router-outlet></router-outlet>
